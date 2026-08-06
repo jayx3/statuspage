@@ -1,0 +1,223 @@
+:root {
+  --surface-1: #fcfcfb;
+  --good:      #0ca30c;
+  --warning:   #fab219;
+  --serious:   #ec835a;
+  --critical:  #d03b3b;
+  --info:      #2a78d6;
+
+  --good-bg:     #eaf7ea;
+  --warning-bg:  #fff6e0;
+  --serious-bg:  #fdece3;
+  --critical-bg: #fbe7e7;
+  --info-bg:     #e8f1fc;
+
+  --bs-body-bg: #f9f9f7;
+  --bs-body-font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --bs-border-color: #e1e0d9;
+  --bs-link-color: var(--info);
+  --bs-link-hover-color: var(--info);
+
+  --bs-primary: var(--info);
+  --bs-primary-rgb: 42, 120, 214;
+  --bs-success: var(--good);
+  --bs-success-rgb: 12, 163, 12;
+  --bs-warning: var(--warning);
+  --bs-warning-rgb: 250, 178, 25;
+  --bs-danger: var(--critical);
+  --bs-danger-rgb: 208, 59, 59;
+  --bs-info: var(--info);
+  --bs-info-rgb: 42, 120, 214;
+}
+
+[data-bs-theme="dark"] {
+  --surface-1: #1a1a19;
+  --info:      #3987e5;
+
+  --good-bg:     #102313;
+  --warning-bg:  #2b2210;
+  --serious-bg:  #2e1c14;
+  --critical-bg: #2e1414;
+  --info-bg:     #131f2c;
+
+  --bs-body-bg: #0d0d0d;
+  --bs-border-color: #2c2c2a;
+  --bs-info: var(--info);
+  --bs-info-rgb: 57, 135, 229;
+}
+
+.card,
+.navbar,
+.modal-content,
+.list-group-item,
+.topbar {
+  background-color: var(--surface-1);
+}
+
+/* Bootstrap only ships utilities for its named theme colors; "serious" (Partial
+   Outage) needs its own badge/dot variant since it isn't one of them. */
+.bg-serious { background-color: var(--serious) !important; color: #fff !important; }
+
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+  flex: none;
+}
+.status-dot.bg-success  { background-color: var(--good); }
+.status-dot.bg-warning  { background-color: var(--warning); }
+.status-dot.bg-serious  { background-color: var(--serious); }
+.status-dot.bg-danger   { background-color: var(--critical); }
+.status-dot.bg-info     { background-color: var(--info); }
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px;
+  border-bottom: 1px solid var(--bs-border-color);
+}
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; }
+.brand-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: var(--info);
+  color: #fff;
+  font-size: 14px;
+  flex: none;
+}
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--bs-border-color);
+  background: transparent;
+  color: var(--bs-secondary-color);
+  font-size: 15px;
+  cursor: pointer;
+}
+.icon-btn:hover { background: var(--bs-tertiary-bg); }
+
+.banner {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 18px 20px;
+  border-radius: 10px;
+  border: 1px solid var(--bs-border-color);
+  margin-bottom: 24px;
+}
+.banner-good { background: var(--good-bg); }
+.banner-issues { background: var(--warning-bg); }
+.banner-icon {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+}
+.banner-icon.bg-success { background-color: var(--good); }
+.banner-icon.bg-warning { background-color: var(--warning); }
+.banner h1 { margin: 0 0 4px; font-size: 19px; }
+.banner-sub {
+  margin: 0;
+  font-size: 13px;
+  color: var(--bs-secondary-color);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--good);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(12, 163, 12, 0.5); }
+  70%  { box-shadow: 0 0 0 6px rgba(12, 163, 12, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(12, 163, 12, 0); }
+}
+
+.panel {
+  background: var(--surface-1);
+  border: 1px solid var(--bs-border-color);
+  border-radius: 10px;
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+.panel-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--bs-border-color);
+}
+.panel-header h2 { margin: 0; font-size: 15px; }
+
+.component-list, .incident-list { padding: 4px 20px 16px; }
+.component-row { padding: 14px 0; border-bottom: 1px solid var(--bs-border-color); }
+.component-row:last-child { border-bottom: none; }
+.component-name { display: flex; align-items: center; font-weight: 600; font-size: 14px; }
+.panel-hint { font-size: 12px; color: var(--bs-secondary-color); }
+
+.uptime-track { display: flex; gap: 2px; margin-top: 10px; }
+.uptime-bar {
+  flex: 1 1 0;
+  min-width: 2px;
+  height: 26px;
+  border-radius: 2px;
+  background: var(--good);
+}
+.uptime-bar.bar-warning  { background: var(--warning); }
+.uptime-bar.bar-serious  { background: var(--serious); }
+.uptime-bar.bar-danger   { background: var(--critical); }
+.uptime-bar.bar-info     { background: var(--info); }
+.uptime-bar.bar-none     { background: var(--bs-border-color); }
+.uptime-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--bs-secondary-color);
+}
+
+.incident-card {
+  border: 1px solid var(--bs-border-color);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin: 12px 0;
+}
+.incident-card:first-child { margin-top: 12px; }
+.incident-card:last-child { margin-bottom: 0; }
+.incident-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 6px; }
+.incident-title { font-weight: 600; font-size: 13.5px; }
+.incident-desc { margin: 0 0 6px; font-size: 13px; color: var(--bs-secondary-color); }
+.incident-time { margin: 0; font-size: 11.5px; color: var(--bs-secondary-color); }
+
+.footer {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 8px 20px 40px;
+  font-size: 12px;
+  color: var(--bs-secondary-color);
+  text-align: center;
+}

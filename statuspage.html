@@ -1,0 +1,639 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AG Risk Status</title>
+<style>
+  :root {
+    color-scheme: light;
+    --surface-1:      #fcfcfb;
+    --page-plane:     #f9f9f7;
+    --text-primary:   #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted:     #898781;
+    --gridline:       #e1e0d9;
+    --baseline:       #c3c2b7;
+    --border:         rgba(11,11,11,0.10);
+    --shadow:         rgba(11,11,11,0.06);
+
+    --good:     #0ca30c;
+    --warning:  #fab219;
+    --serious:  #ec835a;
+    --critical: #d03b3b;
+    --info:     #2a78d6;
+
+    --good-bg:     #eaf7ea;
+    --warning-bg:  #fff6e0;
+    --serious-bg:  #fdece3;
+    --critical-bg: #fbe7e7;
+    --info-bg:     #e8f1fc;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      color-scheme: dark;
+      --surface-1:      #1a1a19;
+      --page-plane:     #0d0d0d;
+      --text-primary:   #ffffff;
+      --text-secondary: #c3c2b7;
+      --text-muted:     #898781;
+      --gridline:       #2c2c2a;
+      --baseline:       #383835;
+      --border:         rgba(255,255,255,0.10);
+      --shadow:         rgba(0,0,0,0.30);
+
+      --good:     #0ca30c;
+      --warning:  #fab219;
+      --serious:  #ec835a;
+      --critical: #d03b3b;
+      --info:     #3987e5;
+
+      --good-bg:     #102313;
+      --warning-bg:  #2b2210;
+      --serious-bg:  #2e1c14;
+      --critical-bg: #2e1414;
+      --info-bg:     #131f2c;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --surface-1:      #1a1a19;
+    --page-plane:     #0d0d0d;
+    --text-primary:   #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted:     #898781;
+    --gridline:       #2c2c2a;
+    --baseline:       #383835;
+    --border:         rgba(255,255,255,0.10);
+    --shadow:         rgba(0,0,0,0.30);
+
+    --good:     #0ca30c;
+    --warning:  #fab219;
+    --serious:  #ec835a;
+    --critical: #d03b3b;
+    --info:     #3987e5;
+
+    --good-bg:     #102313;
+    --warning-bg:  #2b2210;
+    --serious-bg:  #2e1c14;
+    --critical-bg: #2e1414;
+    --info-bg:     #131f2c;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--page-plane);
+    color: var(--text-primary);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  body { min-height: 100vh; }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 24px;
+    background: var(--surface-1);
+    border-bottom: 1px solid var(--border);
+  }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; }
+  .brand-mark {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px; border-radius: 7px;
+    background: var(--info); color: #fff; font-size: 14px;
+  }
+  .topbar-actions { display: flex; align-items: center; gap: 10px; }
+
+  .icon-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 34px; height: 34px; border-radius: 8px;
+    border: 1px solid var(--border);
+    background: transparent; color: var(--text-secondary);
+    font-size: 15px; cursor: pointer;
+  }
+  .icon-btn:hover { background: var(--page-plane); }
+
+  .btn {
+    font: inherit;
+    font-weight: 600;
+    font-size: 13.5px;
+    padding: 8px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface-1);
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+  .btn-primary { background: var(--info); border-color: var(--info); color: #fff; }
+  .btn-primary:hover { filter: brightness(1.06); }
+  .btn-block { width: 100%; }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 28px 20px 60px;
+  }
+
+  .banner {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 18px 20px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    margin-bottom: 28px;
+  }
+  .banner-good { background: var(--good-bg); }
+  .banner-icon {
+    flex: none;
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: var(--good);
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 700;
+  }
+  .banner h1 { margin: 0 0 4px; font-size: 19px; }
+  .banner-sub {
+    margin: 0; font-size: 13px; color: var(--text-secondary);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .live-dot {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--good);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(12,163,12,0.5); }
+    70%  { box-shadow: 0 0 0 6px rgba(12,163,12,0); }
+    100% { box-shadow: 0 0 0 0 rgba(12,163,12,0); }
+  }
+
+  .panel {
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    margin-bottom: 24px;
+    overflow: hidden;
+  }
+  .panel-header {
+    display: flex; align-items: baseline; justify-content: space-between;
+    padding: 16px 20px; border-bottom: 1px solid var(--gridline);
+  }
+  .panel-header h2 { margin: 0; font-size: 15px; }
+  .panel-hint { font-size: 12px; color: var(--text-muted); }
+
+  .component-list { padding: 4px 20px 8px; }
+  .component-row { padding: 16px 0; border-bottom: 1px solid var(--gridline); }
+  .component-row:last-child { border-bottom: none; }
+
+  .component-top {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; margin-bottom: 10px; flex-wrap: wrap;
+  }
+  .component-name { display: flex; align-items: center; gap: 8px; font-weight: 600; font-size: 14px; }
+  .component-desc { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .component-meta { display: flex; align-items: center; gap: 14px; font-size: 12.5px; color: var(--text-secondary); white-space: nowrap; }
+
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+  .dot-good     { background: var(--good); }
+  .dot-warning  { background: var(--warning); }
+  .dot-serious  { background: var(--serious); }
+  .dot-critical { background: var(--critical); }
+  .dot-info     { background: var(--info); }
+
+  .uptime-track { display: flex; gap: 2px; }
+  .uptime-bar {
+    flex: 1 1 0;
+    min-width: 2px;
+    height: 30px;
+    border-radius: 2px;
+    background: var(--good);
+    cursor: default;
+  }
+  .uptime-bar.bar-warning  { background: var(--warning); }
+  .uptime-bar.bar-serious  { background: var(--serious); }
+  .uptime-bar.bar-critical { background: var(--critical); }
+  .uptime-bar.bar-info     { background: var(--info); }
+
+  .uptime-footer {
+    display: flex; justify-content: space-between; margin-top: 6px;
+    font-size: 11.5px; color: var(--text-muted);
+  }
+
+  .incident-list { padding: 6px 20px 10px; }
+  .incident-group { padding: 16px 0; border-bottom: 1px solid var(--gridline); }
+  .incident-group:last-child { border-bottom: none; }
+  .incident-date {
+    font-size: 12.5px; font-weight: 700; color: var(--text-secondary);
+    text-transform: uppercase; letter-spacing: 0.03em; margin-bottom: 10px;
+  }
+
+  .incident-card {
+    border: 1px solid var(--gridline);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .incident-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; padding: 12px 14px; cursor: pointer; background: var(--surface-1);
+  }
+  .incident-head:hover { background: var(--page-plane); }
+  .incident-title-row { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .incident-title { font-size: 13.5px; font-weight: 600; }
+  .impact-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11.5px; font-weight: 700; padding: 3px 9px; border-radius: 100px;
+    white-space: nowrap;
+  }
+  .impact-warning  { background: var(--warning-bg); }
+  .impact-serious  { background: var(--serious-bg); }
+  .impact-critical { background: var(--critical-bg); }
+  .impact-info     { background: var(--info-bg); }
+
+  .chevron { color: var(--text-muted); font-size: 12px; transition: transform 0.15s ease; flex: none; }
+  .incident-card.open .chevron { transform: rotate(90deg); }
+
+  .incident-body {
+    display: none;
+    padding: 4px 16px 16px 16px;
+    border-top: 1px solid var(--gridline);
+  }
+  .incident-card.open .incident-body { display: block; }
+
+  .timeline { list-style: none; margin: 12px 0 0; padding: 0; }
+  .timeline li { position: relative; padding: 0 0 16px 20px; border-left: 2px solid var(--gridline); margin-left: 4px; }
+  .timeline li:last-child { border-left-color: transparent; padding-bottom: 0; }
+  .timeline li::before {
+    content: ""; position: absolute; left: -5px; top: 2px;
+    width: 8px; height: 8px; border-radius: 50%; background: var(--baseline);
+  }
+  .timeline .t-status { font-weight: 700; font-size: 12.5px; margin-right: 6px; }
+  .timeline .t-time { font-size: 11.5px; color: var(--text-muted); }
+  .timeline .t-text { margin: 3px 0 0; font-size: 13px; color: var(--text-secondary); }
+
+  .footer {
+    max-width: 860px; margin: 0 auto; padding: 8px 20px 40px;
+    font-size: 12px; color: var(--text-muted); text-align: center;
+  }
+  .footer p { margin: 4px 0; }
+
+  .modal-backdrop {
+    display: none;
+    position: fixed; inset: 0; background: rgba(11,11,11,0.45);
+    align-items: center; justify-content: center; padding: 20px; z-index: 100;
+  }
+  .modal-backdrop.open { display: flex; }
+  .modal {
+    position: relative;
+    width: 100%; max-width: 380px;
+    background: var(--surface-1);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 20px 50px var(--shadow);
+  }
+  .modal h2 { margin: 0 0 8px; font-size: 17px; }
+  .modal-sub { margin: 0 0 16px; font-size: 13px; color: var(--text-secondary); }
+  .modal-close {
+    position: absolute; top: 12px; right: 12px;
+    width: 28px; height: 28px; border-radius: 50%;
+    border: none; background: transparent; color: var(--text-muted);
+    font-size: 18px; cursor: pointer;
+  }
+  .modal-close:hover { background: var(--page-plane); }
+  #subscribeForm { display: flex; flex-direction: column; gap: 10px; }
+  #subscribeEmail {
+    font: inherit; font-size: 14px; padding: 10px 12px;
+    border-radius: 8px; border: 1px solid var(--border);
+    background: var(--page-plane); color: var(--text-primary);
+  }
+  #subscribeEmail:focus { outline: 2px solid var(--info); outline-offset: 1px; }
+  .modal-note { margin: 12px 0 0; font-size: 12.5px; color: var(--good); min-height: 16px; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 12px);
+    background: var(--text-primary); color: var(--page-plane);
+    padding: 10px 18px; border-radius: 8px; font-size: 13px;
+    opacity: 0; pointer-events: none; transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 200;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  @media (max-width: 560px) {
+    .container { padding: 20px 14px 48px; }
+    .component-meta { font-size: 11.5px; gap: 10px; }
+    .uptime-bar { height: 24px; }
+    .banner h1 { font-size: 17px; }
+  }
+</style>
+</head>
+<body>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark" aria-hidden="true">◈</span>
+      <span>AG Risk Status</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="icon-btn" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">🌓</button>
+      <button class="btn btn-primary" id="subscribeBtn">Subscribe to updates</button>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <section class="banner banner-good">
+      <div class="banner-icon" aria-hidden="true">✓</div>
+      <div>
+        <h1>All Systems Operational</h1>
+        <p class="banner-sub"><span class="live-dot" aria-hidden="true"></span><span id="lastChecked">Monitoring live</span></p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Current status by component</h2>
+        <span class="panel-hint">90-day uptime history</span>
+      </div>
+      <div class="component-list" id="componentList"></div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Past Incidents</h2>
+      </div>
+      <div class="incident-list" id="incidentList"></div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>This is a prototype status page. No real services are being monitored and no notifications are sent.</p>
+    <p id="footerTime"></p>
+  </footer>
+
+  <div class="modal-backdrop" id="subscribeBackdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="subscribeTitle">
+      <button class="modal-close" id="subscribeClose" aria-label="Close">×</button>
+      <h2 id="subscribeTitle">Subscribe to updates</h2>
+      <p class="modal-sub">Get notified by email whenever we create, update, or resolve an incident.</p>
+      <form id="subscribeForm">
+        <input type="email" id="subscribeEmail" placeholder="you@company.com" required>
+        <button type="submit" class="btn btn-primary btn-block">Subscribe</button>
+      </form>
+      <p class="modal-note" id="subscribeNote"></p>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ---------- theme toggle ----------
+  var stored = localStorage.getItem("statuspage-theme");
+  if (stored) document.documentElement.setAttribute("data-theme", stored);
+  document.getElementById("themeToggle").addEventListener("click", function () {
+    var current = document.documentElement.getAttribute("data-theme");
+    var next = current === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", next);
+    localStorage.setItem("statuspage-theme", next);
+  });
+
+  // ---------- data ----------
+  var NOW = new Date();
+
+  function daysAgoDate(n) {
+    var d = new Date(NOW);
+    d.setDate(d.getDate() - n);
+    return d;
+  }
+  function fmtDate(d) {
+    return d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  }
+  function fmtDateLong(d) {
+    return d.toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" });
+  }
+
+  var LEVEL_LABEL = {
+    warning: "Degraded Performance",
+    serious: "Partial Outage",
+    critical: "Major Outage",
+    info: "Scheduled Maintenance"
+  };
+
+  var components = [
+    { name: "Web Dashboard", desc: "Primary risk & PnL web application", uptime: "100.00%", incidents: [] },
+    { name: "REST API", desc: "Public and internal API endpoints", uptime: "99.93%",
+      incidents: [{ daysAgo: 2, level: "warning" }] },
+    { name: "Risk Decomposition Engine", desc: "Factor & scenario risk computation", uptime: "99.99%", incidents: [] },
+    { name: "PnL Aggregation Service", desc: "Realtime and EOD PnL rollups", uptime: "100.00%", incidents: [] },
+    { name: "Market Data Feed", desc: "Live pricing & reference data ingestion", uptime: "99.84%",
+      incidents: [{ daysAgo: 7, level: "serious" }] },
+    { name: "Trade Ingestion Pipeline", desc: "Broker fill & position ingestion", uptime: "99.89%",
+      incidents: [{ daysAgo: 16, level: "critical" }] },
+    { name: "Reporting & Exports", desc: "Scheduled reports and data exports", uptime: "99.97%", incidents: [] },
+    { name: "Database Cluster", desc: "Primary analytics data store", uptime: "99.95%",
+      incidents: [{ daysAgo: 26, level: "info" }] }
+  ];
+
+  var incidentEvents = [
+    {
+      daysAgo: 2, impact: "warning", impactLabel: "Minor",
+      title: "Elevated latency on REST API",
+      updates: [
+        { time: "16:42 UTC", status: "Resolved", text: "Latency has returned to normal levels. This incident has been resolved." },
+        { time: "15:58 UTC", status: "Monitoring", text: "A fix has been deployed and we are monitoring the results." },
+        { time: "15:20 UTC", status: "Identified", text: "We have identified the cause as connection pool exhaustion on one API node." },
+        { time: "15:05 UTC", status: "Investigating", text: "We are investigating reports of elevated API response times." }
+      ]
+    },
+    {
+      daysAgo: 7, impact: "serious", impactLabel: "Major",
+      title: "Partial outage — Market Data Feed (APAC session)",
+      updates: [
+        { time: "09:15 UTC", status: "Resolved", text: "Pricing delivery has been fully restored for all APAC venues." },
+        { time: "08:30 UTC", status: "Monitoring", text: "A failover to our secondary feed handler resolved the delay; monitoring for stability." },
+        { time: "07:52 UTC", status: "Identified", text: "Root cause identified as a stalled consumer on the APAC pricing queue." },
+        { time: "07:30 UTC", status: "Investigating", text: "We are investigating delayed price updates for APAC-listed instruments." }
+      ]
+    },
+    {
+      daysAgo: 16, impact: "critical", impactLabel: "Critical",
+      title: "Major outage — Trade Ingestion Pipeline",
+      updates: [
+        { time: "11:05 UTC", status: "Resolved", text: "All queued fills have been reprocessed and positions are fully reconciled." },
+        { time: "10:40 UTC", status: "Monitoring", text: "Ingestion has resumed; we are reprocessing the backlog and monitoring position accuracy." },
+        { time: "10:05 UTC", status: "Identified", text: "A schema change from an upstream broker feed caused ingestion to fail. Rolling back now." },
+        { time: "09:48 UTC", status: "Investigating", text: "We are investigating a full stop of broker fill ingestion." }
+      ]
+    },
+    {
+      daysAgo: 26, impact: "info", impactLabel: "Maintenance",
+      title: "Scheduled maintenance — Database Cluster upgrade",
+      updates: [
+        { time: "02:30 UTC", status: "Completed", text: "Maintenance completed ahead of schedule with no customer impact." },
+        { time: "01:00 UTC", status: "In Progress", text: "Upgrade is underway. Read replicas remain fully available throughout." },
+        { time: "00:55 UTC", status: "Scheduled", text: "This maintenance window has begun." }
+      ]
+    }
+  ];
+
+  // ---------- render components ----------
+  var componentList = document.getElementById("componentList");
+
+  components.forEach(function (c) {
+    var incidentByDay = {};
+    c.incidents.forEach(function (inc) { incidentByDay[inc.daysAgo] = inc.level; });
+
+    var row = document.createElement("div");
+    row.className = "component-row";
+
+    var track = document.createElement("div");
+    track.className = "uptime-track";
+    for (var d = 89; d >= 0; d--) {
+      var level = incidentByDay[d];
+      var bar = document.createElement("div");
+      bar.className = "uptime-bar" + (level ? " bar-" + level : "");
+      var label = level ? LEVEL_LABEL[level] : "Operational";
+      bar.title = fmtDate(daysAgoDate(d)) + " — " + label;
+      track.appendChild(bar);
+    }
+
+    row.innerHTML =
+      '<div class="component-top">' +
+        '<div>' +
+          '<div class="component-name"><span class="status-dot dot-good"></span>' + c.name + '</div>' +
+          '<div class="component-desc">' + c.desc + '</div>' +
+        '</div>' +
+        '<div class="component-meta"><span>Operational</span><span>' + c.uptime + ' uptime</span></div>' +
+      '</div>';
+    row.appendChild(track);
+
+    var foot = document.createElement("div");
+    foot.className = "uptime-footer";
+    foot.innerHTML = "<span>90 days ago</span><span>Today</span>";
+    row.appendChild(foot);
+
+    componentList.appendChild(row);
+  });
+
+  // ---------- render incidents ----------
+  var incidentList = document.getElementById("incidentList");
+
+  if (incidentEvents.length === 0) {
+    incidentList.innerHTML = '<p style="padding:16px 0;color:var(--text-muted);font-size:13px;">No incidents reported.</p>';
+  }
+
+  incidentEvents.forEach(function (ev, idx) {
+    var group = document.createElement("div");
+    group.className = "incident-group";
+
+    var dateLabel = document.createElement("div");
+    dateLabel.className = "incident-date";
+    dateLabel.textContent = fmtDateLong(daysAgoDate(ev.daysAgo));
+    group.appendChild(dateLabel);
+
+    var card = document.createElement("div");
+    card.className = "incident-card" + (idx === 0 ? " open" : "");
+
+    var head = document.createElement("div");
+    head.className = "incident-head";
+    head.innerHTML =
+      '<div class="incident-title-row">' +
+        '<span class="status-dot dot-' + ev.impact + '"></span>' +
+        '<span class="incident-title">' + ev.title + '</span>' +
+      '</div>' +
+      '<div style="display:flex;align-items:center;gap:10px;">' +
+        '<span class="impact-badge impact-' + ev.impact + '">' + ev.impactLabel + '</span>' +
+        '<span class="chevron">▶</span>' +
+      '</div>';
+    head.addEventListener("click", function () {
+      card.classList.toggle("open");
+    });
+
+    var body = document.createElement("div");
+    body.className = "incident-body";
+    var tl = document.createElement("ul");
+    tl.className = "timeline";
+    ev.updates.forEach(function (u) {
+      var li = document.createElement("li");
+      li.innerHTML =
+        '<span class="t-status">' + u.status + '</span><span class="t-time">' + u.time + '</span>' +
+        '<p class="t-text">' + u.text + '</p>';
+      tl.appendChild(li);
+    });
+    body.appendChild(tl);
+
+    card.appendChild(head);
+    card.appendChild(body);
+    group.appendChild(card);
+    incidentList.appendChild(group);
+  });
+
+  // ---------- live "last checked" + footer clock ----------
+  var lastCheckedEl = document.getElementById("lastChecked");
+  var checkedAt = new Date();
+  function tickLastChecked() {
+    var secs = Math.floor((new Date() - checkedAt) / 1000);
+    var msg = secs < 5 ? "just now" : secs < 60 ? secs + "s ago" : Math.floor(secs / 60) + "m ago";
+    lastCheckedEl.textContent = "Monitoring live — last checked " + msg;
+  }
+  tickLastChecked();
+  setInterval(tickLastChecked, 1000);
+
+  document.getElementById("footerTime").textContent =
+    "Uptime history is simulated for this prototype · Page rendered " + new Date().toLocaleString();
+
+  // ---------- subscribe modal ----------
+  var backdrop = document.getElementById("subscribeBackdrop");
+  var openBtn = document.getElementById("subscribeBtn");
+  var closeBtn = document.getElementById("subscribeClose");
+  var form = document.getElementById("subscribeForm");
+  var note = document.getElementById("subscribeNote");
+  var emailInput = document.getElementById("subscribeEmail");
+
+  function openModal() {
+    backdrop.classList.add("open");
+    note.textContent = "";
+    setTimeout(function () { emailInput.focus(); }, 0);
+  }
+  function closeModal() {
+    backdrop.classList.remove("open");
+    form.reset();
+    note.textContent = "";
+  }
+
+  openBtn.addEventListener("click", openModal);
+  closeBtn.addEventListener("click", closeModal);
+  backdrop.addEventListener("click", function (e) { if (e.target === backdrop) closeModal(); });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeModal(); });
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    var email = emailInput.value.trim();
+    note.textContent = "✓ Subscribed " + email + " (prototype — no email sent).";
+    showToast("Subscribed " + email + " (prototype)");
+    setTimeout(closeModal, 1400);
+  });
+
+  // ---------- toast ----------
+  var toast = document.getElementById("toast");
+  var toastTimer = null;
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toast.classList.remove("show"); }, 2500);
+  }
+})();
+</script>
+
+</body>
+</html>
