@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}StatusPilot - Status pages your users trust{% endblock %}
+{% block content %}
+<section class="hero">
+    <h1>Know the moment something breaks.<br>Tell your users before they ask.</h1>
+    <p class="hero-sub">
+        StatusPilot gives every project a public status page, component-level uptime
+        history, and incident timelines &mdash; without the spreadsheet.
+    </p>
+    <div class="d-flex gap-2 justify-content-center flex-wrap">
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">Get Started Free</a>
+        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-secondary btn-lg">Log In</a>
+    </div>
+</section>
+
+<section class="row g-4 my-4">
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <div class="feature-icon bg-info">&#9889;</div>
+                <h5 class="card-title mt-3">Live Component Status</h5>
+                <p class="card-text text-muted">
+                    Track every part of your stack with a 90-day uptime history your
+                    users can check at a glance.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <div class="feature-icon bg-warning">&#128225;</div>
+                <h5 class="card-title mt-3">Incident Timelines</h5>
+                <p class="card-text text-muted">
+                    Log the exact downtime window for an incident, not just when
+                    someone got around to updating the ticket.
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <div class="feature-icon bg-success">&#128279;</div>
+                <h5 class="card-title mt-3">One Link to Share</h5>
+                <p class="card-text text-muted">
+                    Every project gets a clean public status page you can drop in
+                    your footer, docs, or support replies.
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

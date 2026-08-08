@@ -144,7 +144,7 @@ def delete_component(component_id):
 
 # --- Incidents ---
 
-def create_incident(project_id, title, description, status="Investigating"):
+def create_incident(project_id, title, description, status="Investigating", started_at=None, ended_at=None):
     now = datetime.utcnow()
     return incidents.insert_one(
         {
@@ -153,6 +153,8 @@ def create_incident(project_id, title, description, status="Investigating"):
             "description": description,
             "status": status,
             "resolved": status == "Resolved",
+            "started_at": started_at or now,
+            "ended_at": ended_at,
             "created_at": now,
             "updated_at": now,
         }
@@ -169,7 +171,7 @@ def get_incident(incident_id):
     return incidents.find_one({"_id": ObjectId(incident_id)})
 
 
-def update_incident(incident_id, title, description, status):
+def update_incident(incident_id, title, description, status, started_at, ended_at):
     incidents.update_one(
         {"_id": ObjectId(incident_id)},
         {
@@ -178,6 +180,8 @@ def update_incident(incident_id, title, description, status):
                 "description": description,
                 "status": status,
                 "resolved": status == "Resolved",
+                "started_at": started_at,
+                "ended_at": ended_at,
                 "updated_at": datetime.utcnow(),
             }
         },

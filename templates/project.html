@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{ project.name }} - Status Page{% endblock %}
+{% block title %}{{ project.name }} - StatusPilot{% endblock %}
 {% block content %}
 <div class="d-flex justify-content-between align-items-start mb-4">
     <div>
@@ -51,10 +51,11 @@
             </div>
             <div class="list-group list-group-flush">
                 {% for incident in incidents %}
+                {% set window = incident_window(incident) %}
                 <a href="{{ url_for('incident_detail', project_id=project._id, incident_id=incident._id) }}" class="list-group-item d-flex justify-content-between align-items-center">
                     <span>
                         {{ incident.title }}
-                        <br><small class="text-muted">{{ incident.created_at.strftime('%Y-%m-%d %H:%M UTC') }}</small>
+                        <br><small class="text-muted">{{ window.start }} &rarr; {{ window.end }} ({{ window.duration }})</small>
                     </span>
                     <span class="badge bg-{{ incident_colors[incident.status] }}">{{ incident.status }}</span>
                 </a>
@@ -112,6 +113,18 @@
                     <div class="mb-3">
                         <label class="form-label">Description</label>
                         <textarea name="description" class="form-control" rows="3"></textarea>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Downtime Started</label>
+                            <input type="datetime-local" name="started_at" class="form-control">
+                            <div class="form-text">Leave blank to use the current time.</div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Downtime Ended</label>
+                            <input type="datetime-local" name="ended_at" class="form-control">
+                            <div class="form-text">Leave blank if still ongoing.</div>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">

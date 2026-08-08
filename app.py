@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 
 from flask import Flask, abort, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
@@ -37,9 +38,41 @@ BAR_CLASS = {
 }
 
 
+def incident_window(incident):
+    start = incident.get("started_at") or incident["created_at"]
+    end = incident.get("ended_at")
+    delta = (end or datetime.utcnow()) - start
+    minutes = max(int(delta.total_seconds() // 60), 0)
+    hours, minutes = divmod(minutes, 60)
+    if hours and minutes:
+        duration = f"{hours}h {minutes}m"
+    elif hours:
+        duration = f"{hours}h"
+    else:
+        duration = f"{minutes}m"
+    return {
+        "start": start.strftime("%Y-%m-%d %H:%M UTC"),
+        "end": end.strftime("%Y-%m-%d %H:%M UTC") if end else "ongoing",
+        "duration": duration,
+    }
+
+
+def parse_datetime_local(value):
+    if not value:
+        return None
+    try:
+        return datetime.strptime(value, "%Y-%m-%dT%H:%M")
+    except ValueError:
+        return None
+
+
 @app.context_processor
 def inject_status_colors():
-    return {"status_colors": STATUS_COLORS, "incident_colors": INCIDENT_COLORS}
+    return {
+        "status_colors": STATUS_COLORS,
+        "incident_colors": INCIDENT_COLORS,
+        "incident_window": incident_window,
+    }
 
 
 def slugify(text):
@@ -66,7 +99,7 @@ def get_owned_incident_or_404(project_id, incident_id):
 def index():
     if current_user.is_authenticated:
         return redirect(url_for("dashboard"))
-    return redirect(url_for("auth.login"))
+    return render_template("landing.html")
 
 
 @app.route("/dashboard")
@@ -171,8 +204,10 @@ def create_incident(project_id):
     get_owned_project_or_404(project_id)
     title = request.form.get("title", "").strip()
     description = request.form.get("description", "").strip()
+    started_at = parse_datetime_local(request.form.get("started_at"))
+    ended_at = parse_datetime_local(request.form.get("ended_at"))
     if title:
-        models.create_incident(project_id, title, description)
+        models.create_incident(project_id, title, description, started_at=started_at, ended_at=ended_at)
         flash("Incident created.", "success")
     return redirect(url_for("project_detail", project_id=project_id))
 
@@ -194,12 +229,16 @@ def incident_detail(project_id, incident_id):
 @login_required
 def update_incident(project_id, incident_id):
     get_owned_project_or_404(project_id)
-    get_owned_incident_or_404(project_id, incident_id)
+    incident = get_owned_incident_or_404(project_id, incident_id)
     title = request.form.get("title", "").strip()
     description = request.form.get("description", "").strip()
     status = request.form.get("status")
+    started_at = parse_datetime_local(request.form.get("started_at")) or incident.get("started_at") or incident["created_at"]
+    ended_at = parse_datetime_local(request.form.get("ended_at"))
+    if not ended_at and status == "Resolved":
+        ended_at = datetime.utcnow()
     if title and status in models.INCIDENT_STATUSES:
-        models.update_incident(incident_id, title, description, status)
+        models.update_incident(incident_id, title, description, status, started_at, ended_at)
         flash("Incident updated.", "success")
     return redirect(url_for("incident_detail", project_id=project_id, incident_id=incident_id))
 
