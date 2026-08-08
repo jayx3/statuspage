@@ -1,4 +1,4 @@
-# StatusPilot
+# ClearStatus
 
 A very simple Statuspage-style app: create projects, track component status, post incidents,
 and share a public status page. Built with Flask + MongoDB + Bootstrap 5.

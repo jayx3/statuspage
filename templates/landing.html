@@ -1,15 +1,63 @@
 {% extends "base.html" %}
-{% block title %}StatusPilot - Status pages your users trust{% endblock %}
+{% block title %}ClearStatus - Simple, clear status pages{% endblock %}
 {% block content %}
 <section class="hero">
-    <h1>Know the moment something breaks.<br>Tell your users before they ask.</h1>
+    <span class="hero-badge">Built for small teams</span>
+    <h1>Simple &amp; clear<br>status pages.</h1>
     <p class="hero-sub">
-        StatusPilot gives every project a public status page, component-level uptime
-        history, and incident timelines &mdash; without the spreadsheet.
+        Track component status, log incidents with the exact downtime window, and
+        share one public page your users can check &mdash; before they open a ticket.
     </p>
     <div class="d-flex gap-2 justify-content-center flex-wrap">
         <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg">Get Started Free</a>
-        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-secondary btn-lg">Log In</a>
+        <a href="#preview" class="btn btn-outline-secondary btn-lg">See a Live Example</a>
+    </div>
+</section>
+
+<section id="preview" class="mockup-frame">
+    <div class="mockup-bar">
+        <span class="mockup-dot" style="background:var(--critical)"></span>
+        <span class="mockup-dot" style="background:var(--warning)"></span>
+        <span class="mockup-dot" style="background:var(--good)"></span>
+        <span class="mockup-url">clearstatus.app/status/acme-inc</span>
+    </div>
+    <div class="mockup-body">
+        <div class="banner banner-good mb-3">
+            <div class="banner-icon bg-success">&#10003;</div>
+            <div>
+                <h1>All Systems Operational</h1>
+                <p class="banner-sub"><span class="live-dot"></span>Live status</p>
+            </div>
+        </div>
+        <div class="panel mb-3">
+            <div class="panel-header"><h2>Components</h2><span class="panel-hint">90-day history</span></div>
+            <div class="component-list">
+                <div class="component-row">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="component-name"><span class="status-dot bg-success"></span>API</span>
+                        <span class="badge bg-success">Operational</span>
+                    </div>
+                </div>
+                <div class="component-row">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="component-name"><span class="status-dot bg-info"></span>Web Dashboard</span>
+                        <span class="badge bg-info">Maintenance</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="panel-header"><h2>Incident History</h2></div>
+            <div class="incident-list">
+                <div class="incident-card">
+                    <div class="incident-head">
+                        <span class="incident-title">Elevated API latency</span>
+                        <span class="badge bg-success">Resolved</span>
+                    </div>
+                    <p class="incident-time">2026-08-06 14:10 UTC &rarr; 16:05 UTC (1h 55m)</p>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
@@ -17,11 +65,13 @@
     <div class="col-md-4">
         <div class="card h-100 shadow-sm">
             <div class="card-body">
-                <div class="feature-icon bg-info">&#9889;</div>
-                <h5 class="card-title mt-3">Live Component Status</h5>
+                <div class="feature-icon bg-info">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+                </div>
+                <h5 class="card-title mt-3">Component Status</h5>
                 <p class="card-text text-muted">
-                    Track every part of your stack with a 90-day uptime history your
-                    users can check at a glance.
+                    Track every part of your stack, from API to database, with a
+                    90-day uptime history your team keeps up to date.
                 </p>
             </div>
         </div>
@@ -29,11 +79,13 @@
     <div class="col-md-4">
         <div class="card h-100 shadow-sm">
             <div class="card-body">
-                <div class="feature-icon bg-warning">&#128225;</div>
+                <div class="feature-icon bg-warning">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0Z"/></svg>
+                </div>
                 <h5 class="card-title mt-3">Incident Timelines</h5>
                 <p class="card-text text-muted">
-                    Log the exact downtime window for an incident, not just when
-                    someone got around to updating the ticket.
+                    Log the exact downtime window for an incident &mdash; when it
+                    started, when it ended, how long it lasted.
                 </p>
             </div>
         </div>
@@ -41,7 +93,9 @@
     <div class="col-md-4">
         <div class="card h-100 shadow-sm">
             <div class="card-body">
-                <div class="feature-icon bg-success">&#128279;</div>
+                <div class="feature-icon bg-success">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                </div>
                 <h5 class="card-title mt-3">One Link to Share</h5>
                 <p class="card-text text-muted">
                     Every project gets a clean public status page you can drop in

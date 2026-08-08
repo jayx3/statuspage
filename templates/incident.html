@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{ incident.title }} - StatusPilot{% endblock %}
+{% block title %}{{ incident.title }} - ClearStatus{% endblock %}
 {% block content %}
 {% set window = incident_window(incident) %}
 <a href="{{ url_for('project_detail', project_id=project._id) }}" class="text-decoration-none">&larr; {{ project.name }}</a>
