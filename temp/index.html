@@ -1,26 +1,27 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="ico" href="{{ url_for('static', filename='favicon.ico') }}" />
+    <link rel="icon" type="ico" href="icons/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="A simple status page and incident tracking tool"
+      content="A simple open-source, self-hosted status monitoring tool"
     />
     <meta
       name="keywords"
-      content="status page, uptime, incident tracking, component status, downtime"
+      content="monitor uptime, status, latency chart, discord, notifications, status pages, ping chart, certificate info,"
     />
-    <meta name="title" property="og:title" content="ClearStatus" />
+    <meta name="author" content="Chaman Bravo" />
+    <meta name="title" property="og:title" content="Upstat" />
     <meta
       name="description"
       property="og:description"
-      content="A simple status page and incident tracking tool"
+      content="A simple open-source, self-hosted status monitoring tool"
     />
-    <meta property="og:image" content="{{ url_for('static', filename='img/landing/upstat.webp') }}" />
-    <title>ClearStatus | simple &amp; clear status pages</title>
+    <meta property="og:image" content="./images/upstat.webp" />
+    <title>Upstat | simple & easy status monitoring</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/landing.css') }}" />
+    <link rel="stylesheet" href="index.css" />
     <link
       href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
       rel="stylesheet"
@@ -34,18 +35,18 @@
       <h1
         class="text-[#c9d3ee] font-semibold hover:text-white cursor-pointer transition"
       >
-        ClearStatus
+        Upstat
       </h1>
       <div class="flex items-center gap-4">
         <a
           class="text-[#c9d3ee] font-normal hover:text-white transition"
-          href="{{ url_for('auth.login') }}"
-          >Log In</a
+          href="https://github.com/chamanbravo/upstat"
+          >Github</a
         >
         <a
           class="text-[#c9d3ee] font-normal hover:text-white transition"
-          href="{{ url_for('auth.register') }}"
-          >Sign Up</a
+          href="https://upstat.chamanbudhathoki.com.np"
+          >Demo</a
         >
       </div>
     </div>
@@ -54,33 +55,37 @@
         class="py-8 container mx-auto flex flex-col lg:flex-row max-w-[1300px]"
       >
         <div class="relative z-10 flex-1 lg:top-16">
-          <span
+          <a
+            href="https://github.com/chamanbravo/upstat/stargazers"
+            target="_blank"
             class="inline-block px-3 border rounded-full text-sm font-bold py-[6px] border-[#7C87F7]/[0.36] bg-[#7C87F7]/10 leading-[121%] tracking-[0.045em]"
           >
             <div class="text-xs font-bold text-gray-400">
-              Built for small teams
+              Proudly Open Source
             </div>
-          </span>
+          </a>
           <h2
             class="mt-4 logs-text text-transparent font-semibold md:whitespace-nowrap text-[44px] md:text-[56px] leading-[105%] text-white"
           >
-            Simple & clear
-            <div class="pb-1">status pages.</div>
+            Simple & easy
+            <div class="pb-1">status monitoring.</div>
           </h2>
           <p class="mt-3 md:text-large-18 text-gray-400 max-w-[418px]">
-            Give your team and customers one clear place to see the status of
-            every component, log incidents with the exact downtime window, and
-            stay ahead of support tickets.
+            Monitor your API and website with an open-source, self-hosted tool
+            that alerts you to performance issues and downtime before users are
+            affected.
           </p>
           <p class="inline-flex gap-4 mt-6 md:text-large-18">
             <a
               class="-m-1 p-1 px-4 group inline-flex items-center bg-[#434eac] font-medium text-gray-200 rounded-md hover:opacity-95"
-              href="{{ url_for('auth.register') }}"
+              href="https://github.com/chamanbravo/upstat"
+              target="_blank"
               >Get Started </a
             ><a
               class="-m-1 p-1 px-4 group inline-flex items-center border text-[#7c87f7] border-[#434eac] font-medium rounded-md hover:text-gray-200 hover:bg-[#434eac]"
-              href="{{ url_for('auth.login') }}"
-              >Log In
+              href="https://upstat.chamanbudhathoki.com.np"
+              target="_blank"
+              >Demo
             </a>
           </p>
           <div
@@ -89,10 +94,10 @@
             <div
               class="group block p-6 flex-1 rounded-xl border transition lg:w-[270px] bg-[#0B0C14] hover:bg-[#727DA1]/10 border-[#727DA1]/15"
             >
-              <div class="mt-3 font-medium text-white">Component Status</div>
+              <div class="mt-3 font-medium text-white">Uptime monitoring</div>
               <p class="mt-1 text-gray-400">
-                Check the status of every part of your stack, all in one
-                place your whole team can keep up to date.
+                Check uptime, SSL, ports, DNS, and more. Get notified any
+                performance issues.
               </p>
             </div>
             <div
@@ -113,8 +118,8 @@
             width="943"
             height="677"
             class="absolute top-0 left-0 hidden lg:block max-w-none lazyloaded"
-            alt="ClearStatus dashboard"
-            src="{{ url_for('static', filename='img/landing/upstat.webp') }}"
+            alt="upstat dashboard"
+            src="./images/upstat.webp"
           />
           <div class="lg:h-[677px]"></div>
         </div>
@@ -131,7 +136,7 @@
               Everything you need.
             </h2>
             <p class="mt-3 text-center text-gray-400 md:text-large-18">
-              ClearStatus streamlines your workflow, enhances reliability,
+              Discover upstat streamlines your workflow, enhances reliability,
               and drives operational excellence.
             </p>
           </div>
@@ -141,16 +146,16 @@
             >
               <div>
                 <img
-                  alt="live component status"
-                  src="{{ url_for('static', filename='img/landing/real-time-monitor.webp') }}"
+                  alt="upstat real time monitoring"
+                  src="./images/real-time-monitor.webp"
                 />
               </div>
               <h4 class="mt-2 text-xl font-medium text-white">
-                Live Status Updates
+                Real-Time Monitoring
               </h4>
               <p class="text-gray-400">
-                See the current status of every component the moment your
-                team updates it.
+                Instantly detect downtime and performance issues before they
+                impact users.
               </p>
             </div>
             <div
@@ -158,8 +163,8 @@
             >
               <div>
                 <img
-                  alt="status pages"
-                  src="{{ url_for('static', filename='img/landing/status-pages.webp') }}"
+                  alt="upstat status pages"
+                  src="./images/status-pages.webp"
                 />
               </div>
               <h4 class="mt-2 text-xl font-medium text-white">
@@ -175,8 +180,8 @@
             >
               <div>
                 <img
-                  alt="incident notifications"
-                  src="{{ url_for('static', filename='img/landing/notifications.png') }}"
+                  alt="upstat incident notifications"
+                  src="./images/notifications.png"
                 />
               </div>
               <h4 class="mt-2 text-xl font-medium text-white">Notifications</h4>
@@ -192,7 +197,24 @@
       <footer
         class="py-8 container mx-auto flex flex-col lg:flex-row max-w-[1300px] text-[#c9d3ee] gap-2 items-center justify-center"
       >
-        <span class="text-sm"> ClearStatus </span>
+        <span class="text-sm"> Upstat </span>
+        <span class="hidden text-sm sm:block">•</span>
+        <span class="text-sm">
+          <a
+            href="https://github.com/chamanbravo/upstat"
+            target="_blank"
+            class="text-sm underline"
+            >Github</a
+          >
+        </span>
+        <span class="text-sm">
+          <a
+            href="mailto:chamanpro9@gmail.com"
+            target="_blank"
+            class="text-sm underline"
+            >Email</a
+          >
+        </span>
       </footer>
     </div>
   </body>
